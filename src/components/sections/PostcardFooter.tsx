@@ -22,7 +22,7 @@ export function PostcardFooter() {
   };
 
   return (
-    <footer className="border-t-2 border-[var(--ink-primary)] bg-[#f2eae1]/82 pb-24 md:pb-12 pt-12">
+    <footer className="border-t-2 border-[var(--ink-primary)] bg-[var(--surface-footer-tint)] pb-24 md:pb-12 pt-12">
       <div className="mx-auto w-[min(1240px,92%)]">
         {/* Vintage Postcard Back Layout */}
         <div className="border border-[var(--ink-primary)] bg-[var(--surface-paper-elevated)] p-6 md:p-10 shadow-[3px_5px_0_rgba(23,20,22,0.1)]">
@@ -33,7 +33,10 @@ export function PostcardFooter() {
                 <p className="font-mono-dossier text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--stamp-crimson)]">
                   POST CARD · CORRESPONDENCE
                 </p>
-                <h2 className="mt-2 font-masthead text-[2rem] leading-none tracking-[-0.06em] text-[var(--ink-primary)]">
+                <h2
+                  data-music-title-bloom=""
+                  className="mt-2 font-masthead text-[2rem] leading-none tracking-[-0.06em] text-[var(--ink-primary)] title-bass-glow"
+                >
                   VICE FILES
                 </h2>
                 <p className="mt-3 text-[0.92rem] leading-[1.55] text-[var(--ink-secondary)]">
@@ -93,7 +96,7 @@ export function PostcardFooter() {
                 <button
                   type="button"
                   onClick={handleFlyToTop}
-                  className="group relative inline-flex min-h-[46px] items-center gap-3 border border-[var(--ink-primary)] bg-[var(--ink-primary)] px-4 py-2 font-signage font-bold uppercase tracking-[0.06em] text-[0.92rem] text-[var(--ink-inverse)] hover:bg-[var(--stamp-crimson)] hover:border-[var(--stamp-crimson)] transition-colors cursor-pointer"
+                  className="group relative inline-flex min-h-[46px] items-center gap-3 border border-[var(--stamp-crimson)] bg-[var(--stamp-crimson)] px-4 py-2 font-signage font-bold uppercase tracking-[0.06em] text-[0.92rem] text-[var(--ink-inverse)] hover:bg-[var(--stamp-crimson-dark)] hover:border-[var(--stamp-crimson-dark)] transition-colors cursor-pointer street-sign-frame"
                 >
                   <span>Volver al cielo</span>
                   <motion.span

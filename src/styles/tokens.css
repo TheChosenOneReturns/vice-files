@@ -19,6 +19,8 @@
   --surface-paper: #f2eae1;
   --surface-paper-elevated: #faf4eb;
   --surface-paper-recessed: #e7dcd3;
+  --surface-recessed-tint: rgba(231, 220, 211, 0.8);
+  --surface-footer-tint: rgba(242, 234, 225, 0.84);
   --surface-photo-night: #1d1530;
   --surface-dock-glass: rgba(242, 234, 225, 0.88);
 
@@ -27,6 +29,7 @@
   --ink-secondary: #4d454a;
   --ink-muted: #7c7276;
   --ink-inverse: #f7f2ec;
+  --on-ink: #f7f2ec;
   --ink-hairline: rgba(23, 20, 22, 0.16);
   --ink-rule: #bcb0ab;
   --ink-border-strong: rgba(23, 20, 22, 0.86);
@@ -84,6 +87,35 @@
 
   /* === AUDIO CROSS-REACTIVITY (Updated directly on DOM via RAF, 0 React re-renders) === */
   --bass: 0;
+}
+
+/* === MODO OSCURO: VICE AFTER HOURS === */
+:root[data-theme="dark"] {
+  --surface-paper: #100b1a;
+  --surface-paper-elevated: #1a132b;
+  --surface-paper-recessed: #150f24;
+  --surface-recessed-tint: rgba(21, 15, 36, 0.84);
+  --surface-footer-tint: rgba(16, 11, 26, 0.88);
+  --surface-photo-night: #0b0714;
+  --surface-dock-glass: rgba(24, 17, 40, 0.9);
+
+  --ink-primary: #f7f1e9;
+  --ink-secondary: #c5b8d1;
+  --ink-muted: #9383a6;
+  --ink-inverse: #f7f2ec;
+  --on-ink: #120c1f;
+  --ink-hairline: rgba(247, 241, 233, 0.14);
+  --ink-rule: rgba(230, 90, 157, 0.28);
+  --ink-border-strong: rgba(247, 241, 233, 0.42);
+
+  --stamp-crimson: #e05a88;
+  --stamp-crimson-bright: #f275a2;
+  --stamp-crimson-dark: #c24270;
+  --wanted-active: #ff5c8d;
+  --wanted-idle: rgba(255, 92, 141, 0.25);
+
+  --shadow-paper-card: 0 2px 0 rgba(0, 0, 0, 0.35),
+    0 18px 40px -18px rgba(0, 0, 0, 0.65);
 }
 
 @layer base {

@@ -27,7 +27,7 @@ export function StreetSignButton({
   const variantStyles = {
     crimson:
       "bg-[var(--stamp-crimson)] text-[var(--ink-inverse)] hover:bg-[var(--stamp-crimson-dark)] street-sign-frame",
-    ink: "bg-[var(--ink-primary)] text-[var(--ink-inverse)] hover:bg-[var(--stamp-crimson)] border border-[var(--ink-primary)] hover:border-[var(--stamp-crimson)]",
+    ink: "bg-[var(--ink-primary)] text-[var(--on-ink)] hover:bg-[var(--stamp-crimson)] hover:text-[var(--ink-inverse)] border border-[var(--ink-primary)] hover:border-[var(--stamp-crimson)]",
     outline:
       "bg-transparent text-[var(--ink-primary)] border border-[var(--ink-primary)] hover:bg-[var(--stamp-crimson)] hover:border-[var(--stamp-crimson)] hover:text-[var(--ink-inverse)]",
   }[variant];

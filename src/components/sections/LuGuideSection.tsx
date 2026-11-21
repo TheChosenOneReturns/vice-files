@@ -25,7 +25,8 @@ export function LuGuideSection() {
           </p>
           <h2
             id="lu-heading"
-            className="mt-1.5 font-serif-editorial italic font-normal text-[clamp(2.8rem,5vw,4.8rem)] leading-none tracking-[-0.04em]"
+            data-music-title-bloom=""
+            className="mt-1.5 font-serif-editorial italic font-normal text-[clamp(2.8rem,5vw,4.8rem)] leading-none tracking-[-0.04em] title-bass-glow"
           >
             Para Lu<span className="text-[var(--stamp-crimson)]">,</span>
           </h2>

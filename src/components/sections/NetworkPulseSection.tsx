@@ -25,7 +25,8 @@ export function NetworkPulseSection() {
           </p>
           <h2
             id="pulse-title"
-            className="mt-2 font-signage font-bold text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.94] tracking-[-0.04em] max-w-[12ch]"
+            data-music-title-bloom=""
+            className="mt-2 font-signage font-bold text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.94] tracking-[-0.04em] max-w-[12ch] title-bass-glow"
           >
             El pulso de las redes
             <span className="text-[var(--stamp-crimson)]">.</span>

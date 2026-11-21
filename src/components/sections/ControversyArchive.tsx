@@ -75,7 +75,10 @@ function ControversyCard({
             <span>{item.kicker}</span>
           </div>
 
-          <h3 className="mt-2 font-signage font-bold text-[clamp(1.65rem,2.4vw,2.35rem)] leading-[1.0] tracking-[-0.02em] text-[var(--ink-primary)] group-hover:text-[var(--stamp-crimson)] transition-colors">
+          <h3
+            data-music-title-bloom=""
+            className="mt-2 font-signage font-bold text-[clamp(1.65rem,2.4vw,2.35rem)] leading-[1.0] tracking-[-0.02em] text-[var(--ink-primary)] group-hover:text-[var(--stamp-crimson)] transition-colors title-bass-glow"
+          >
             {item.title}
           </h3>
 
@@ -127,7 +130,8 @@ export function ControversyArchive() {
           </p>
           <h2
             id="archive-heading"
-            className="mt-1.5 font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em]"
+            data-music-title-bloom=""
+            className="mt-1.5 font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em] title-bass-glow"
           >
             El archivo<span className="text-[var(--stamp-crimson)]">.</span>
           </h2>
@@ -159,7 +163,7 @@ export function ControversyArchive() {
                 onClick={() => setActiveGroup(group)}
                 className={`relative min-h-[42px] px-3.5 font-signage font-bold uppercase tracking-[0.05em] text-[0.92rem] transition-colors cursor-pointer rounded-[2px] border ${
                   active
-                    ? "border-[var(--ink-primary)] bg-[var(--ink-primary)] text-[var(--ink-inverse)]"
+                    ? "border-[var(--ink-primary)] bg-[var(--ink-primary)] text-[var(--on-ink)]"
                     : "border-[var(--ink-rule)] bg-transparent text-[var(--ink-primary)] hover:border-[var(--stamp-crimson)] hover:text-[var(--stamp-crimson)]"
                 }`}
               >
@@ -208,7 +212,7 @@ export function ControversyArchive() {
           <button
             type="button"
             onClick={resetFilters}
-            className="mt-4 inline-flex min-h-[44px] items-center bg-[var(--ink-primary)] px-5 font-signage font-bold uppercase tracking-[0.06em] text-[var(--ink-inverse)] cursor-pointer hover:bg-[var(--stamp-crimson)] transition-colors"
+            className="mt-4 inline-flex min-h-[44px] items-center bg-[var(--ink-primary)] px-5 font-signage font-bold uppercase tracking-[0.06em] text-[var(--on-ink)] cursor-pointer hover:bg-[var(--stamp-crimson)] hover:text-[var(--ink-inverse)] transition-colors"
           >
             Mostrar los {CONTROVERSIES.length} expedientes
           </button>

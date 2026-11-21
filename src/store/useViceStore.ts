@@ -5,8 +5,21 @@ import type { PlaylistTrack } from "../data/stations";
 
 export type RadioViewState = "standby" | "compact" | "expanded";
 export type SpectrumMode = "bars" | "waves" | "off";
+export type ThemeMode = "light" | "dark";
+
+function getInitialTheme(): ThemeMode {
+  if (typeof window === "undefined") return "light";
+  const saved = window.localStorage.getItem("vice-theme");
+  if (saved === "dark" || saved === "light") return saved;
+  return "light";
+}
 
 interface ViceState {
+  // Theme (Light Editorial Paper vs Dark Vice After Hours)
+  theme: ThemeMode;
+  toggleTheme: () => void;
+  setTheme: (theme: ThemeMode) => void;
+
   // Archive filters
   activeGroup: ControversyGroup | "Todas";
   minWantedLevel: number;
@@ -48,6 +61,26 @@ interface ViceState {
 const SPECTRUM_ORDER: SpectrumMode[] = ["bars", "waves", "off"];
 
 export const useViceStore = create<ViceState>((set) => ({
+  theme: getInitialTheme(),
+  toggleTheme: () =>
+    set((state) => {
+      const next: ThemeMode = state.theme === "dark" ? "light" : "dark";
+      try {
+        window.localStorage.setItem("vice-theme", next);
+      } catch {
+        // ignore storage errors
+      }
+      return { theme: next };
+    }),
+  setTheme: (theme) => {
+    try {
+      window.localStorage.setItem("vice-theme", theme);
+    } catch {
+      // ignore storage errors
+    }
+    set({ theme });
+  },
+
   activeGroup: "Todas",
   minWantedLevel: 0,
   setActiveGroup: (activeGroup) => set({ activeGroup }),

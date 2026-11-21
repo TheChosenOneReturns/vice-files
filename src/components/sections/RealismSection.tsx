@@ -28,7 +28,7 @@ export function RealismSection() {
     <section
       id="realismo"
       aria-labelledby="real-title"
-      className="border-y border-[var(--ink-rule)] bg-[#e7dcd3]/78 py-14 md:py-20"
+      className="border-y border-[var(--ink-rule)] bg-[var(--surface-recessed-tint)] py-14 md:py-20"
     >
       <div className="mx-auto grid w-[min(1240px,92%)] grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center">
         <div>
@@ -40,7 +40,8 @@ export function RealismSection() {
           </p>
           <h2
             id="real-title"
-            className="mt-2 font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em]"
+            data-music-title-bloom=""
+            className="mt-2 font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em] title-bass-glow"
           >
             ¿Inmersión
             <br />

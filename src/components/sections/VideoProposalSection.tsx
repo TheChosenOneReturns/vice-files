@@ -21,7 +21,8 @@ export function VideoProposalSection() {
           </p>
           <h2
             id="video-title"
-            className="mt-2 font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em]"
+            data-music-title-bloom=""
+            className="mt-2 font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em] title-bass-glow"
           >
             Del post
             <br />

@@ -24,7 +24,7 @@ export function SourcesSection() {
       id="fuentes"
       aria-labelledby="sources-title"
       style={{ contentVisibility: "auto", containIntrinsicSize: "1px 1200px" }}
-      className="border-t border-[var(--ink-rule)] bg-[#e7dcd3]/82 py-14 md:py-20"
+      className="border-t border-[var(--ink-rule)] bg-[var(--surface-recessed-tint)] py-14 md:py-20"
     >
       <div className="mx-auto w-[min(1240px,92%)]">
         <p className="font-mono-dossier text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[var(--stamp-crimson)]">
@@ -37,7 +37,8 @@ export function SourcesSection() {
           <div>
             <h2
               id="sources-title"
-              className="font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em]"
+              data-music-title-bloom=""
+              className="font-signage font-bold text-[clamp(3rem,6vw,5.2rem)] leading-[0.92] tracking-[-0.04em] title-bass-glow"
             >
               Las fuentes<span className="text-[var(--stamp-crimson)]">.</span>
             </h2>
@@ -67,7 +68,7 @@ export function SourcesSection() {
                 onClick={() => setSourceFilter(f.value)}
                 className={`min-h-[44px] px-4 font-signage font-bold uppercase tracking-[0.05em] text-[0.94rem] border transition-colors cursor-pointer ${
                   active
-                    ? "border-[var(--ink-primary)] bg-[var(--ink-primary)] text-[var(--ink-inverse)]"
+                    ? "border-[var(--ink-primary)] bg-[var(--ink-primary)] text-[var(--on-ink)]"
                     : "border-[var(--ink-rule)] bg-transparent text-[var(--ink-primary)] hover:border-[var(--stamp-crimson)] hover:text-[var(--stamp-crimson)]"
                 }`}
               >

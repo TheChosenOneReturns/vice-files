@@ -1,6 +1,9 @@
+import { useEffect } from "react";
 import { MotionConfig } from "motion/react";
+import { useViceStore } from "./store/useViceStore";
 import { SmoothScrollProvider } from "./components/core/SmoothScrollProvider";
 import { PaperTexturesLayer } from "./components/core/PaperTexturesLayer";
+import { VhsCrtOverlay } from "./components/core/VhsCrtOverlay";
 import { Topbar } from "./components/core/Topbar";
 import { HeroPostcard } from "./components/sections/HeroPostcard";
 import { LuGuideSection } from "./components/sections/LuGuideSection";
@@ -18,6 +21,19 @@ import { LeonidaRadioPill } from "./components/audio/LeonidaRadioPill";
 import { AmbientSpectrumCanvas } from "./components/audio/AmbientSpectrumCanvas";
 
 export function App() {
+  const theme = useViceStore((s) => s.theme);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute(
+        "content",
+        theme === "dark" ? "#100B1A" : "#F2EAE1"
+      );
+    }
+  }, [theme]);
+
   return (
     <MotionConfig reducedMotion="user">
       <SmoothScrollProvider>
@@ -26,6 +42,7 @@ export function App() {
         </a>
 
         <PaperTexturesLayer />
+        <VhsCrtOverlay />
         <AmbientSpectrumCanvas />
 
         <div id="vice-stage" className="relative z-10">

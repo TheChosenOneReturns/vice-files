@@ -1,7 +1,10 @@
+import { Moon, Sun } from "lucide-react";
 import { useViceStore } from "../../store/useViceStore";
 
 export function Topbar() {
   const setScriptOpen = useViceStore((s) => s.setScriptOpen);
+  const theme = useViceStore((s) => s.theme);
+  const toggleTheme = useViceStore((s) => s.toggleTheme);
 
   return (
     <header
@@ -66,14 +69,40 @@ export function Topbar() {
           </a>
         </nav>
 
-        <button
-          type="button"
-          onClick={() => setScriptOpen(true)}
-          className="inline-flex min-h-[44px] items-center gap-2.5 border border-[var(--ink-primary)] px-3.5 py-2 font-signage font-bold uppercase tracking-[0.05em] text-[0.88rem] md:text-[0.96rem] transition-colors hover:bg-[var(--stamp-crimson)] hover:border-[var(--stamp-crimson)] hover:text-[var(--ink-inverse)] cursor-pointer mr-14 md:mr-0"
-        >
-          <span>Guion del video</span>
-          <span aria-hidden="true">↗</span>
-        </button>
+        <div className="flex items-center gap-2 mr-14 md:mr-0">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={
+              theme === "dark"
+                ? "Cambiar a modo papel claro"
+                : "Cambiar a modo oscuro Vice Night"
+            }
+            aria-pressed={theme === "dark"}
+            className="inline-flex min-h-[44px] items-center gap-1.5 border border-[var(--ink-rule)] px-3 py-2 font-mono-dossier text-[0.68rem] font-bold uppercase tracking-[0.06em] text-[var(--ink-primary)] transition-colors hover:border-[var(--stamp-crimson)] hover:text-[var(--stamp-crimson)] cursor-pointer"
+          >
+            {theme === "dark" ? (
+              <>
+                <Sun className="h-4 w-4 text-[#F7C378]" />
+                <span className="hidden sm:inline">Papel</span>
+              </>
+            ) : (
+              <>
+                <Moon className="h-4 w-4 text-[var(--vice-indigo)]" />
+                <span className="hidden sm:inline">Noche</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setScriptOpen(true)}
+            className="inline-flex min-h-[44px] items-center gap-2.5 border border-[var(--ink-primary)] px-3.5 py-2 font-signage font-bold uppercase tracking-[0.05em] text-[0.88rem] md:text-[0.96rem] transition-colors hover:bg-[var(--stamp-crimson)] hover:border-[var(--stamp-crimson)] hover:text-[var(--ink-inverse)] cursor-pointer"
+          >
+            <span>Guion del video</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
       </div>
     </header>
   );

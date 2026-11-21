@@ -139,7 +139,8 @@ export function HeroPostcard() {
           <div className="mt-2 flex items-center justify-between gap-4 border-b-[3px] border-double border-[var(--ink-primary)] pb-3 md:pb-4">
             <h1
               id="mast"
-              className="overflow-hidden font-masthead text-[clamp(3.3rem,12.2vw,9.8rem)] leading-[0.84] tracking-[-0.075em] uppercase select-none"
+              data-music-title-bloom=""
+              className="overflow-hidden font-masthead text-[clamp(3.3rem,12.2vw,9.8rem)] leading-[0.84] tracking-[-0.075em] uppercase select-none masthead-sunset title-bass-glow"
             >
               <span className="hero-masthead-word inline-block masthead-sunset">
                 VICE
@@ -266,7 +267,10 @@ export function HeroPostcard() {
                 Expediente de portada
               </p>
 
-              <h2 className="mt-2 font-signage font-bold uppercase text-[clamp(3.3rem,5.8vw,5.4rem)] leading-[0.84] tracking-[-0.045em] text-[var(--ink-primary)]">
+              <h2
+                data-music-title-bloom=""
+                className="mt-2 font-signage font-bold uppercase text-[clamp(3.3rem,5.8vw,5.4rem)] leading-[0.84] tracking-[-0.045em] text-[var(--ink-primary)] title-bass-glow"
+              >
                 El caso
                 <br />
                 <em className="not-italic text-[var(--stamp-crimson)]">

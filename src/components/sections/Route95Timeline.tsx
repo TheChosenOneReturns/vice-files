@@ -28,7 +28,8 @@ export function Route95Timeline() {
             </p>
             <h2
               id="route-heading"
-              className="mt-1 font-signage font-bold text-[clamp(2.8rem,5.5vw,5rem)] leading-[0.92] tracking-[-0.04em]"
+              data-music-title-bloom=""
+              className="mt-1 font-signage font-bold text-[clamp(2.8rem,5.5vw,5rem)] leading-[0.92] tracking-[-0.04em] title-bass-glow"
             >
               La cronología
               <span className="text-[var(--stamp-crimson)]">.</span>
