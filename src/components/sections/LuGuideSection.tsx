@@ -45,15 +45,17 @@ export function LuGuideSection() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-8 lg:gap-16 items-start">
         <div className="font-serif-editorial text-[1.08rem] md:text-[1.18rem] leading-[1.54] text-[var(--ink-secondary)] max-w-[49ch]">
           <p>
-            Amiwa, hay una pregunta que me gustaría que llevemos al video:{" "}
+            Amiwa,{" "}
             <strong className="text-[var(--ink-primary)] font-bold">
-              ¿cuándo pasamos de hablar de una regla del juego a hablar de lo
-              que alguien cree que puede exigirle a una mujer?
+              tu mirada es lo mejor que puede tener este video: animate a prender
+              la cámara y contarlo a tu manera, porque con tu voz esto va a
+              quedar increíble.
             </strong>
           </p>
           <p className="mt-3">
-            Te dejé tres paradas. Elegí la que te dé más curiosidad y después
-            comparamos qué nos llamó la atención a cada uno.
+            Te dejé todo ordenado en tres paradas cortitas para que elijas por
+            dónde empezar sin presión y después crucemos qué nos llamó más la
+            atención a cada uno.
           </p>
           <span className="mt-4 block font-serif-editorial italic text-[1.5rem] text-[var(--stamp-crimson)]">
             Ariel

@@ -22,9 +22,8 @@ import { assetUrl } from "../../lib/assetUrl";
 import { MOTION } from "../../lib/motion";
 
 const SPECTRUM_LABELS: Record<SpectrumMode, string> = {
-  dual: "Dual",
-  waves: "Ondas",
   bars: "Barras",
+  waves: "Ondas",
   off: "Off",
 };
 
@@ -299,8 +298,8 @@ export function LeonidaRadioPill() {
             </span>
             <Radio className="h-3.5 w-3.5 text-[#F7C378] hidden sm:block" />
             <span className="font-mono-dossier text-[0.72rem] font-bold tracking-[0.06em] whitespace-nowrap">
-              <span className="hidden sm:inline">88.9 LEONIDA FM · </span>
-              <span className="text-[#F7C378]">TUNE IN</span>
+              <span className="hidden sm:inline">104.5 FM · SOLA · </span>
+              <span className="text-[#F7C378]">PLAY</span>
             </span>
           </motion.button>
         )}
@@ -521,7 +520,7 @@ export function LeonidaRadioPill() {
                   className="inline-flex min-h-[36px] items-center justify-center gap-1.5 rounded border border-white/15 bg-white/8 px-2.5 py-1 font-mono-dossier text-[0.62rem] font-bold uppercase tracking-wider text-white hover:border-[#E65A9D] transition-colors cursor-pointer"
                 >
                   <AudioWaveform className="h-3.5 w-3.5 text-[#F7C378]" />
-                  <span>Fondo: {SPECTRUM_LABELS[spectrumMode]}</span>
+                  <span>Lados: {SPECTRUM_LABELS[spectrumMode]}</span>
                 </button>
 
                 <button

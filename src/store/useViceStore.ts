@@ -4,7 +4,7 @@ import type { SourceKind } from "../data/sources";
 import type { RadioStation } from "../data/stations";
 
 export type RadioViewState = "standby" | "compact" | "expanded";
-export type SpectrumMode = "dual" | "waves" | "bars" | "off";
+export type SpectrumMode = "bars" | "waves" | "off";
 
 interface ViceState {
   // Archive filters
@@ -27,7 +27,7 @@ interface ViceState {
   sourceFilter: SourceKind | "todos";
   setSourceFilter: (filter: SourceKind | "todos") => void;
 
-  // Leonida FM Radio Pill & Background Spectrum state
+  // Leonida FM Radio Pill & Side Spectrum state
   radioView: RadioViewState;
   isPlaying: boolean;
   isLooping: boolean;
@@ -45,7 +45,7 @@ interface ViceState {
   setCustomStation: (station: RadioStation | null) => void;
 }
 
-const SPECTRUM_ORDER: SpectrumMode[] = ["dual", "waves", "bars", "off"];
+const SPECTRUM_ORDER: SpectrumMode[] = ["bars", "waves", "off"];
 
 export const useViceStore = create<ViceState>((set) => ({
   activeGroup: "Todas",
@@ -72,8 +72,8 @@ export const useViceStore = create<ViceState>((set) => ({
   isPlaying: false,
   isLooping: true,
   stationIndex: 0,
-  volume: 0.72,
-  spectrumMode: "dual",
+  volume: 0.78,
+  spectrumMode: "bars",
   customStation: null,
   setRadioView: (radioView) => set({ radioView }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
