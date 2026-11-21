@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="viceSun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5A48B8" />
+      <stop offset="52%" stop-color="#E65A9D" />
+      <stop offset="100%" stop-color="#F7C378" />
+    </linearGradient>
+    <linearGradient id="viceVert" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B75E8" />
+      <stop offset="55%" stop-color="#E65A9D" />
+      <stop offset="100%" stop-color="#F7C378" />
+    </linearGradient>
+  </defs>
+
+  <!-- Midnight Vice rounded tile with sunset frame -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#171028" stroke="url(#viceSun)" stroke-width="3" />
+
+  <!-- Bold italic VF monogram -->
+  <text
+    x="28"
+    y="44"
+    text-anchor="middle"
+    font-family="Arial Black, Impact, sans-serif"
+    font-weight="900"
+    font-style="italic"
+    font-size="30"
+    letter-spacing="-2.5"
+    fill="url(#viceVert)"
+  >
+    VF
+  </text>
+
+  <!-- Wanted Star accent -->
+  <path
+    d="M50 12 L52.1 16.4 L57 17 L53.4 20.4 L54.3 25.2 L50 22.8 L45.7 25.2 L46.6 20.4 L43 17 L47.9 16.4 Z"
+    fill="#F7C378"
+  />
+</svg>
