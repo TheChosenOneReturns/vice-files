@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/archivo.woff2") format("woff2");
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("/fonts/barlow.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* === SUPERFICIES (Papel impreso & Marcos) === */
+  --surface-paper: #f2eae1;
+  --surface-paper-elevated: #faf4eb;
+  --surface-paper-recessed: #e7dcd3;
+  --surface-photo-night: #1d1530;
+  --surface-dock-glass: rgba(242, 234, 225, 0.88);
+
+  /* === TINTAS & TEXTOS === */
+  --ink-primary: #171416;
+  --ink-secondary: #4d454a;
+  --ink-muted: #7c7276;
+  --ink-inverse: #f7f2ec;
+  --ink-hairline: rgba(23, 20, 22, 0.16);
+  --ink-rule: #bcb0ab;
+  --ink-border-strong: rgba(23, 20, 22, 0.86);
+
+  /* === GRADIENTE SUNSET LEONIDA === */
+  --vice-indigo: #5a48b8;
+  --vice-violet: #8d51b5;
+  --vice-magenta: #e65a9d;
+  --vice-coral: #f28578;
+  --vice-gold: #f7c378;
+
+  /* === SEÑALÉTICA, SELLOS & ESTADOS === */
+  --stamp-crimson: #a94b50;
+  --stamp-crimson-bright: #c46367;
+  --stamp-crimson-dark: #86363c;
+  --wanted-active: #d94854;
+  --wanted-idle: rgba(169, 75, 80, 0.24);
+  --status-confirmed: #a94b50;
+  --status-legal: #5a48b8;
+  --status-rumor: #b77030;
+
+  /* === GRADIENTES SEMÁNTICOS === */
+  --grad-vice-masthead: linear-gradient(
+    176deg,
+    #5943a5 6%,
+    #9651ad 32%,
+    #d76294 58%,
+    #ed987a 82%,
+    #dfac70 100%
+  );
+  --grad-vice-duotone: linear-gradient(
+    135deg,
+    var(--vice-indigo) 0%,
+    var(--vice-magenta) 65%,
+    var(--vice-coral) 100%
+  );
+  --grad-neon-sign: linear-gradient(
+    180deg,
+    #8878df 0%,
+    #e66da9 52%,
+    #f3b978 100%
+  );
+
+  /* === SOMBRAS EDITORIALES === */
+  --shadow-paper-card: 0 1px 0 rgba(23, 20, 22, 0.08),
+    0 12px 30px -16px rgba(29, 21, 48, 0.16);
+  --shadow-dossier-sheet: 0 -10px 40px -12px rgba(23, 20, 22, 0.26);
+
+  /* === TIPOGRAFÍA === */
+  --font-masthead: "Archivo", "Arial Black", sans-serif;
+  --font-signage: "Barlow", "Arial Narrow", sans-serif;
+  --font-editorial: "Inter Tight", system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  /* === AUDIO CROSS-REACTIVITY (Updated directly on DOM via RAF, 0 React re-renders) === */
+  --bass: 0;
+}
+
+@layer base {
+  html {
+    background-color: var(--surface-paper);
+    color: var(--ink-primary);
+    font-family: var(--font-editorial);
+    scroll-padding-top: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--surface-paper);
+    color: var(--ink-primary);
+    overflow-x: clip;
+  }
+
+  button,
+  a,
+  [role="tab"],
+  summary {
+    touch-action: manipulation;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid var(--vice-indigo);
+    outline-offset: 3px;
+  }
+}
+
+/* Lenis smooth scroll base */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Font utility helpers */
+.font-masthead {
+  font-family: var(--font-masthead);
+}
+.font-signage {
+  font-family: var(--font-signage);
+}
+.font-editorial {
+  font-family: var(--font-editorial);
+}
+.font-serif-editorial {
+  font-family: var(--font-serif);
+}
+.font-mono-dossier {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Masthead ink-halftone + Leonida sunset gradient text */
+.masthead-sunset {
+  color: #ac578d;
+  background-image: radial-gradient(rgba(87, 41, 82, 0.25) 0.65px, transparent 0.8px),
+    var(--grad-vice-masthead);
+  background-size: 3px 3px, 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Street sign inner border detail */
+.street-sign-frame {
+  outline: 1px solid rgba(247, 242, 236, 0.35);
+  outline-offset: -3px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  width: auto;
+  height: auto;
+  clip-path: none;
+  background: var(--ink-primary);
+  color: var(--ink-inverse);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-signage);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

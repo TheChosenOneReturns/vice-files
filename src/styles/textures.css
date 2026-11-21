@@ -1,0 +1,177 @@
+/* === PAPER GRAIN OVERLAY (1 single fixed node, < 1KB SVG) === */
+.paper-grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.055;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* === FOLDED POSTER CREASE LINES === */
+.poster-fold-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(
+    180deg,
+    rgba(23, 20, 22, 0.06) 0%,
+    rgba(23, 20, 22, 0.06) 50%,
+    rgba(255, 255, 255, 0.48) 50%,
+    rgba(255, 255, 255, 0.48) 100%
+  );
+}
+
+.poster-fold-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(
+    90deg,
+    rgba(23, 20, 22, 0.055) 0%,
+    rgba(23, 20, 22, 0.055) 50%,
+    rgba(255, 255, 255, 0.44) 50%,
+    rgba(255, 255, 255, 0.44) 100%
+  );
+}
+
+/* === RISOGRAPH DUOTONE FILTER LAYER (Never animate `filter` directly; animate opacity!) === */
+.risograph-layer {
+  filter: url(#vice-risograph);
+  will-change: opacity;
+}
+
+/* === UV GLOSS SPECULAR GLARE === */
+.glare-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 60% at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 245, 232, 0.55),
+    transparent 58%
+  );
+  mix-blend-mode: soft-light;
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 4;
+}
+
+@media (hover: hover) {
+  .glare-surface:hover::after {
+    opacity: 1;
+  }
+}
+
+/* === POSTCARD VARNISH SWEEP & WATER GLINTS === */
+@keyframes varnishSweep {
+  0% {
+    transform: translateX(-65%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(65%);
+    opacity: 0;
+  }
+}
+
+@keyframes waterTide {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.42;
+  }
+  50% {
+    transform: translateX(3%);
+    opacity: 0.92;
+  }
+}
+
+@keyframes roadPrint {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 6s linear infinite;
+}
+
+.animate-marquee-track {
+  animation: marqueeScroll 14s linear infinite;
+}
+
+.animate-ticker-loop {
+  animation: marqueeScroll 36s linear infinite;
+}
+
+.animate-ticker-loop:hover {
+  animation-play-state: paused;
+}
+
+/* === BASS-REACTIVE AURA & MICRO-KICK (GPU ONLY, ZERO RE-RENDERS) === */
+.bass-glow {
+  opacity: calc(0.22 + var(--bass, 0) * 0.68);
+  transform: scale(calc(1 + var(--bass, 0) * 0.14));
+  will-change: transform, opacity;
+}
+
+.bass-kick {
+  transform: scale(calc(1 + var(--bass, 0) * 0.08));
+  will-change: transform;
+}
+
+.bass-hero-halo {
+  opacity: calc(0.08 + var(--bass, 0) * 0.28);
+  transform: scale(calc(1 + var(--bass, 0) * 0.05));
+  will-change: transform, opacity;
+}
+
+/* === REDUCED MOTION COMPLIANCE === */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow,
+  .animate-marquee-track,
+  .animate-ticker-loop {
+    animation: none !important;
+  }
+  .bass-glow,
+  .bass-kick,
+  .bass-hero-halo {
+    transform: none !important;
+    opacity: 0.2 !important;
+  }
+}
