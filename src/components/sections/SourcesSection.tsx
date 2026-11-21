@@ -23,11 +23,15 @@ export function SourcesSection() {
     <section
       id="fuentes"
       aria-labelledby="sources-title"
-      className="border-t border-[var(--ink-rule)] bg-[#e7dcd3]/78 py-14 md:py-20"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "1px 1200px" }}
+      className="border-t border-[var(--ink-rule)] bg-[#e7dcd3]/82 py-14 md:py-20"
     >
       <div className="mx-auto w-[min(1240px,92%)]">
         <p className="font-mono-dossier text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[var(--stamp-crimson)]">
-          ★ PARA SEGUIR LEYENDO
+          <span data-music-bloom="" className="music-bloom-star mr-1">
+            ★
+          </span>
+          PARA SEGUIR LEYENDO
         </p>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
           <div>

@@ -11,9 +11,8 @@ interface RisographMediaFrameProps {
 }
 
 /**
- * 60fps Dual-Layer Risograph Duotone -> Full Color frame.
- * Never animates `filter` directly; animates opacity of the duotone top layer
- * + subtle CSS specular UV glare following pointer coordinates.
+ * High-FPS single-image editorial frame with pure-GPU Vice Sunset duotone veil.
+ * Avoids expensive SVG <filter> passes so scrolling stays locked at 60fps.
  */
 export function RisographMediaFrame({
   src,
@@ -27,7 +26,6 @@ export function RisographMediaFrame({
   const frameRef = useRef<HTMLDivElement>(null);
   const [inCenterBand, setInCenterBand] = useState(false);
 
-  // On touch / mobile devices (no hover), reveal true color when card crosses center band
   useEffect(() => {
     if (window.matchMedia("(hover: hover)").matches) return;
     const node = frameRef.current;
@@ -59,26 +57,26 @@ export function RisographMediaFrame({
       onMouseMove={handleMouseMove}
       className={`group/media relative overflow-hidden bg-[var(--surface-photo-night)] glare-surface ${aspectClass}`}
     >
-      {/* Layer 1: True color image */}
       <img
         src={src}
         alt={alt}
+        decoding="async"
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : undefined}
         style={{ objectPosition }}
         className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/media:scale-[1.045]"
       />
 
-      {/* Layer 2: Risograph Duotone overlay (fades out cleanly on hover or mobile center-band) */}
-      <img
-        src={src}
-        alt=""
+      {/* Lightweight GPU Vice Sunset tint veil (fades out cleanly on hover or center band) */}
+      <div
         aria-hidden="true"
-        loading={priority ? "eager" : "lazy"}
-        style={{ objectPosition }}
-        className={`pointer-events-none absolute inset-0 h-full w-full object-cover risograph-layer transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          inCenterBand ? "opacity-0" : "opacity-85 group-hover/media:opacity-0"
+        className={`pointer-events-none absolute inset-0 transition-opacity duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          inCenterBand ? "opacity-0" : "opacity-55 group-hover/media:opacity-0"
         }`}
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(72,49,158,0.62) 0%, rgba(215,98,148,0.45) 65%, rgba(242,133,120,0.28) 100%)",
+        }}
       />
 
       {badgeText && (

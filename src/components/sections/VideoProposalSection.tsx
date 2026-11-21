@@ -14,7 +14,10 @@ export function VideoProposalSection() {
       <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center">
         <div>
           <p className="font-mono-dossier text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[var(--stamp-crimson)]">
-            ★ PROPUESTA PARA GRABAR
+            <span data-music-bloom="" className="music-bloom-star mr-1">
+              ★
+            </span>
+            PROPUESTA PARA GRABAR
           </p>
           <h2
             id="video-title"

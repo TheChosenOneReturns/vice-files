@@ -33,7 +33,10 @@ export function RealismSection() {
       <div className="mx-auto grid w-[min(1240px,92%)] grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-center">
         <div>
           <p className="font-mono-dossier text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[var(--stamp-crimson)]">
-            ★ LA SEGUNDA VIDA
+            <span data-music-bloom="" className="music-bloom-star mr-1">
+              ★
+            </span>
+            LA SEGUNDA VIDA
           </p>
           <h2
             id="real-title"

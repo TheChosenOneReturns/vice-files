@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import { ROUTE_MILESTONES, THERMOMETER_METRICS } from "../../data/timeline";
@@ -6,39 +6,9 @@ import { useViceStore } from "../../store/useViceStore";
 import { Route95ShieldSvg, WaveSvg } from "../editorial/PosterArtworks";
 import { MOTION } from "../../lib/motion";
 
-// Lazy-load Paper Shaders Dithering only on capable desktop devices
-const LazyDithering = lazy(() =>
-  import("@paper-design/shaders-react").then((mod) => ({
-    default: mod.Dithering,
-  }))
-);
-
 export function Route95Timeline() {
   const openCase = useViceStore((s) => s.openCase);
-  const [enableShader, setEnableShader] = useState(false);
   const [metricsVisible, setMetricsVisible] = useState(false);
-
-  useEffect(() => {
-    const canUseDesktopShader =
-      window.matchMedia(
-        "(min-width: 1024px) and (hover: hover) and (prefers-reduced-motion: no-preference)"
-      ).matches && !navigator.connection?.saveData;
-
-    if (!canUseDesktopShader) return;
-
-    try {
-      const testCanvas = document.createElement("canvas");
-      const gl = testCanvas.getContext("webgl2", {
-        failIfMajorPerformanceCaveat: true,
-      });
-      if (gl) {
-        gl.getExtension("WEBGL_lose_context")?.loseContext();
-        setEnableShader(true);
-      }
-    } catch {
-      setEnableShader(false);
-    }
-  }, []);
 
   return (
     <section
@@ -46,10 +16,12 @@ export function Route95Timeline() {
       aria-labelledby="route-heading"
       className="mx-auto w-[min(1240px,92%)] border-t border-[var(--ink-rule)] py-12 md:py-20"
     >
-      {/* Header + Paper Shaders Dithering Wave Accent */}
+      {/* Header + Crisp Vector Wave Accent (Zero WebGL overhead) */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <Route95ShieldSvg className="h-12 w-12 shrink-0" />
+          <div data-music-bloom="" className="music-bloom-badge shrink-0">
+            <Route95ShieldSvg className="h-12 w-12" />
+          </div>
           <div>
             <p className="font-mono-dossier text-[0.7rem] font-bold uppercase tracking-[0.09em] text-[var(--stamp-crimson)]">
               Ruta 95 · 2014 — Noviembre 2026
@@ -64,42 +36,24 @@ export function Route95Timeline() {
           </div>
         </div>
 
-        <div className="relative h-[38px] w-[104px] overflow-hidden rounded-[2px]">
-          <WaveSvg className="relative z-10 h-full w-full text-[var(--stamp-crimson)]" />
-          {enableShader && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-50"
-            >
-              <Suspense fallback={null}>
-                <LazyDithering
-                  style={{ width: "100%", height: "100%" }}
-                  shape="wave"
-                  type="4x4"
-                  size={2}
-                  speed={0.16}
-                  colorBack="#f2eae1"
-                  colorFront="#9f506d"
-                />
-              </Suspense>
-            </div>
-          )}
+        <div className="h-[36px] w-[96px]">
+          <WaveSvg className="h-full w-full text-[var(--stamp-crimson)]" />
         </div>
       </div>
 
-      {/* Milestones Grid (Horizontal cards on desktop, left-accent vertical rail on mobile) */}
+      {/* Milestones Grid */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
         {ROUTE_MILESTONES.map((item, idx) => (
           <motion.button
             key={item.id}
             type="button"
             onClick={() => openCase(item.caseId)}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{
-              duration: 0.45,
-              delay: idx * 0.05,
+              duration: 0.4,
+              delay: idx * 0.04,
               ease: MOTION.viceGlide,
             }}
             className="group flex flex-col items-start text-left border-l-[3px] md:border-l-0 md:border-t-[3px] border-[var(--stamp-crimson)] pl-4 md:pl-0 md:pt-4 pb-2 cursor-pointer"

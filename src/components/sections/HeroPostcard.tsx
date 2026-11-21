@@ -186,13 +186,14 @@ export function HeroPostcard() {
               {/* Physical Printed Postcard Card */}
               <div className="hero-postcard-frame relative bg-[var(--surface-paper-elevated)] border border-[#b5a5a7] p-2 pb-0 shadow-[2px_6px_0_rgba(96,67,80,0.12)] -rotate-[0.8deg]">
                 <div className="relative aspect-[16/9] sm:aspect-[2.05/1] overflow-hidden bg-[var(--surface-photo-night)]">
-                  {/* Bass-reactive sunset sky halo */}
+                  {/* Targeted reactive sunset bloom inside postcard sky */}
                   <div
+                    data-music-bloom=""
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 z-10 mix-blend-screen bass-hero-halo"
+                    className="pointer-events-none absolute inset-0 z-10 music-bloom-halo"
                     style={{
                       background:
-                        "radial-gradient(circle at 50% 28%, rgba(230,90,157,0.45), transparent 65%)",
+                        "radial-gradient(circle at 50% 28%, rgba(230,90,157,0.42), rgba(247,195,120,0.18) 45%, transparent 70%)",
                     }}
                   />
 
@@ -256,7 +257,12 @@ export function HeroPostcard() {
             {/* Right Column: Cover Story "El caso Mandy" + Action Bar */}
             <div className="flex flex-col items-start">
               <p className="inline-flex items-center gap-2 font-mono-dossier text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[var(--stamp-crimson)]">
-                <span className="text-base leading-none">✦</span>
+                <span
+                  data-music-bloom=""
+                  className="text-base leading-none music-bloom-star"
+                >
+                  ✦
+                </span>
                 Expediente de portada
               </p>
 

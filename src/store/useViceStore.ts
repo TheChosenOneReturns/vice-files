@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ControversyGroup } from "../data/controversies";
 import type { SourceKind } from "../data/sources";
-import type { RadioStation } from "../data/stations";
+import type { PlaylistTrack } from "../data/stations";
 
 export type RadioViewState = "standby" | "compact" | "expanded";
 export type SpectrumMode = "bars" | "waves" | "off";
@@ -27,22 +27,22 @@ interface ViceState {
   sourceFilter: SourceKind | "todos";
   setSourceFilter: (filter: SourceKind | "todos") => void;
 
-  // Leonida FM Radio Pill & Side Spectrum state
+  // Leonida FM Playlist & Reactive Spectrum state
   radioView: RadioViewState;
   isPlaying: boolean;
   isLooping: boolean;
-  stationIndex: number;
+  trackIndex: number;
   volume: number;
   spectrumMode: SpectrumMode;
-  customStation: RadioStation | null;
+  customTracks: PlaylistTrack[];
   setRadioView: (view: RadioViewState) => void;
   setIsPlaying: (playing: boolean) => void;
   toggleLoop: () => void;
-  setStationIndex: (index: number) => void;
+  setTrackIndex: (index: number) => void;
   setVolume: (vol: number) => void;
   setSpectrumMode: (mode: SpectrumMode) => void;
   cycleSpectrumMode: () => void;
-  setCustomStation: (station: RadioStation | null) => void;
+  addCustomTrack: (track: PlaylistTrack) => void;
 }
 
 const SPECTRUM_ORDER: SpectrumMode[] = ["bars", "waves", "off"];
@@ -70,15 +70,15 @@ export const useViceStore = create<ViceState>((set) => ({
 
   radioView: "standby",
   isPlaying: false,
-  isLooping: true,
-  stationIndex: 0,
-  volume: 0.78,
+  isLooping: false, // Default: auto-advance through the playlist continuously
+  trackIndex: 0,
+  volume: 0.8,
   spectrumMode: "bars",
-  customStation: null,
+  customTracks: [],
   setRadioView: (radioView) => set({ radioView }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
   toggleLoop: () => set((state) => ({ isLooping: !state.isLooping })),
-  setStationIndex: (stationIndex) => set({ stationIndex }),
+  setTrackIndex: (trackIndex) => set({ trackIndex }),
   setVolume: (volume) => set({ volume }),
   setSpectrumMode: (spectrumMode) => set({ spectrumMode }),
   cycleSpectrumMode: () =>
@@ -90,5 +90,6 @@ export const useViceStore = create<ViceState>((set) => ({
         ];
       return { spectrumMode: next };
     }),
-  setCustomStation: (customStation) => set({ customStation }),
+  addCustomTrack: (track) =>
+    set((state) => ({ customTracks: [...state.customTracks, track] })),
 }));

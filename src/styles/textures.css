@@ -1,12 +1,6 @@
-/* === PAPER GRAIN OVERLAY (1 single fixed node, < 1KB SVG) === */
-.paper-grain-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 90;
-  opacity: 0.055;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* === LIGHTWEIGHT PAPER TEXTURE ON BODY (Zero fixed full-screen blend layer!) === */
+body {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%234b383a' opacity='.07' filter='url(%23n)' d='M0 0h150v150H0z'/%3E%3C/svg%3E");
 }
 
 /* === FOLDED POSTER CREASE LINES === */
@@ -44,13 +38,7 @@
   );
 }
 
-/* === RISOGRAPH DUOTONE FILTER LAYER (Never animate `filter` directly; animate opacity!) === */
-.risograph-layer {
-  filter: url(#vice-risograph);
-  will-change: opacity;
-}
-
-/* === UV GLOSS SPECULAR GLARE === */
+/* === UV GLOSS SPECULAR GLARE (GPU opacity only) === */
 .glare-surface::after {
   content: "";
   position: absolute;
@@ -59,53 +47,16 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse 60% 60% at var(--glare-x, 50%) var(--glare-y, 50%),
-    rgba(255, 245, 232, 0.55),
+    rgba(255, 245, 232, 0.48),
     transparent 58%
   );
-  mix-blend-mode: soft-light;
-  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 4;
 }
 
 @media (hover: hover) {
   .glare-surface:hover::after {
     opacity: 1;
-  }
-}
-
-/* === POSTCARD VARNISH SWEEP & WATER GLINTS === */
-@keyframes varnishSweep {
-  0% {
-    transform: translateX(-65%);
-    opacity: 0;
-  }
-  35% {
-    opacity: 0.85;
-  }
-  100% {
-    transform: translateX(65%);
-    opacity: 0;
-  }
-}
-
-@keyframes waterTide {
-  0%,
-  100% {
-    transform: translateX(0);
-    opacity: 0.42;
-  }
-  50% {
-    transform: translateX(3%);
-    opacity: 0.92;
-  }
-}
-
-@keyframes roadPrint {
-  from {
-    stroke-dashoffset: 1;
-  }
-  to {
-    stroke-dashoffset: 0;
   }
 }
 
@@ -120,10 +71,10 @@
 
 @keyframes marqueeScroll {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -131,22 +82,19 @@
   animation: spinSlow 6s linear infinite;
 }
 
-.animate-marquee-track {
-  animation: marqueeScroll 14s linear infinite;
-}
-
 .animate-ticker-loop {
   animation: marqueeScroll 36s linear infinite;
+  will-change: transform;
 }
 
 .animate-ticker-loop:hover {
   animation-play-state: paused;
 }
 
-/* === BASS-REACTIVE AURA & MICRO-KICK (GPU ONLY, ZERO RE-RENDERS) === */
+/* === LOCALIZED BASS REACTIVITY (Scoped ONLY to playerRef, never :root!) === */
 .bass-glow {
-  opacity: calc(0.22 + var(--bass, 0) * 0.68);
-  transform: scale(calc(1 + var(--bass, 0) * 0.14));
+  opacity: calc(0.2 + var(--bass, 0) * 0.65);
+  transform: scale(calc(1 + var(--bass, 0) * 0.12));
   will-change: transform, opacity;
 }
 
@@ -155,23 +103,38 @@
   will-change: transform;
 }
 
-.bass-hero-halo {
-  opacity: calc(0.08 + var(--bass, 0) * 0.28);
-  transform: scale(calc(1 + var(--bass, 0) * 0.05));
-  will-change: transform, opacity;
+/* === TARGETED PAGE ACCENT BLOOMS (Updated ONLY on visible [data-music-bloom] nodes!) === */
+.music-bloom-star {
+  position: relative;
+  display: inline-block;
+  transform: scale(calc(1 + var(--bloom, 0) * 0.16));
+  text-shadow: 0 0 calc(var(--bloom, 0) * 14px) rgba(230, 90, 157, 0.85),
+    0 0 calc(var(--bloom, 0) * 6px) rgba(247, 195, 120, 0.75);
+}
+
+.music-bloom-halo {
+  opacity: calc(var(--bloom, 0) * 0.65);
+  transform: scale(calc(0.95 + var(--bloom, 0) * 0.22));
+}
+
+.music-bloom-badge {
+  transform: scale(calc(1 + var(--bloom, 0) * 0.05));
+  filter: drop-shadow(0 0 calc(var(--bloom, 0) * 10px) rgba(230, 90, 157, 0.55));
 }
 
 /* === REDUCED MOTION COMPLIANCE === */
 @media (prefers-reduced-motion: reduce) {
   .animate-spin-slow,
-  .animate-marquee-track,
   .animate-ticker-loop {
     animation: none !important;
   }
   .bass-glow,
   .bass-kick,
-  .bass-hero-halo {
+  .music-bloom-star,
+  .music-bloom-halo,
+  .music-bloom-badge {
     transform: none !important;
-    opacity: 0.2 !important;
+    text-shadow: none !important;
+    filter: none !important;
   }
 }

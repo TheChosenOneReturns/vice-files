@@ -52,6 +52,7 @@ export function WantedStarsMeter({
         return (
           <motion.span
             key={starNum}
+            data-music-bloom={active ? "" : undefined}
             initial={{ scale: active ? 1.6 : 1, opacity: active ? 0 : 0.4 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true, amount: 0.4 }}
@@ -59,7 +60,9 @@ export function WantedStarsMeter({
               ...MOTION.stampSlam,
               delay: active ? idx * 0.055 : 0,
             }}
-            className={`${starSize} leading-none select-none`}
+            className={`${starSize} leading-none select-none ${
+              active ? "music-bloom-star" : ""
+            }`}
             style={{
               color: active ? "var(--wanted-active)" : "var(--wanted-idle)",
             }}

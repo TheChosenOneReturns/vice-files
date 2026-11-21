@@ -28,7 +28,7 @@ export function App() {
         <PaperTexturesLayer />
         <AmbientSpectrumCanvas />
 
-        <div id="vice-stage" className="relative z-10 will-change-transform">
+        <div id="vice-stage" className="relative z-10">
           <Topbar />
 
           <main>

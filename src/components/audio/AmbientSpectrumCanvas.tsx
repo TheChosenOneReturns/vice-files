@@ -3,41 +3,69 @@ import { leonidaAudio } from "../../lib/audioEngine";
 import { useViceStore } from "../../store/useViceStore";
 
 /**
- * AmbientSpectrumCanvas
- * Minimalist editorial side-margin spectrums emerging gently from the LEFT & RIGHT
- * edges of the page based on the music, plus a silky smooth sub-bass micro-tremor
- * on `#vice-stage` whenever a strong bass drop hits.
- *
- * Zero React re-renders: runs purely in requestAnimationFrame + Canvas 2D + GPU transform.
+ * AmbientSpectrumCanvas (Ultra-Optimized)
+ * 1) Renders ONLY two narrow side-edge canvases (96px desktop / 38px mobile, dpr=1)
+ * 2) Drives silky smooth sub-bass micro-tremor on `#vice-stage` during strong bass hits (> 0.62)
+ * 3) Drives localized GPU blooms ONLY on currently-visible `[data-music-bloom]` accent elements
+ *    (stars, diamonds, neon sign, brand emblem) via IntersectionObserver — ZERO :root style recalcs!
+ * 4) Stops RAF 100% when paused (0% CPU/GPU at rest).
  */
 export function AmbientSpectrumCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const leftCanvasRef = useRef<HTMLCanvasElement>(null);
+  const rightCanvasRef = useRef<HTMLCanvasElement>(null);
   const isPlaying = useViceStore((s) => s.isPlaying);
   const spectrumMode = useViceStore((s) => s.spectrumMode);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const leftCanvas = leftCanvasRef.current;
+    const rightCanvas = rightCanvasRef.current;
+    if (!leftCanvas || !rightCanvas) return;
+
+    const lCtx = leftCanvas.getContext("2d");
+    const rCtx = rightCanvas.getContext("2d");
+    if (!lCtx || !rCtx) return;
 
     const stageEl = document.getElementById("vice-stage");
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     );
 
-    let width = 0;
+    // Track ONLY currently-visible bloom targets (~3-6 tiny accent nodes at any scroll position)
+    const visibleBlooms = new Set<HTMLElement>();
+    const bloomTargets = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-music-bloom]")
+    );
+
+    const bloomObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const el = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            visibleBlooms.add(el);
+          } else {
+            visibleBlooms.delete(el);
+            el.style.removeProperty("--bloom");
+          }
+        }
+      },
+      { rootMargin: "40px 0px" }
+    );
+
+    for (const el of bloomTargets) {
+      bloomObserver.observe(el);
+    }
+
+    let stripW = 96;
     let height = 0;
-    let dpr = 1;
 
     const resize = () => {
       const isMobile = window.innerWidth < 768;
-      dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.35 : 1.75);
-      width = window.innerWidth;
+      stripW = isMobile ? 38 : 96;
       height = window.innerHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      leftCanvas.width = stripW;
+      leftCanvas.height = height;
+      rightCanvas.width = stripW;
+      rightCanvas.height = height;
     };
 
     resize();
@@ -49,12 +77,14 @@ export function AmbientSpectrumCanvas() {
     let shakePhase = 0;
     let smoothShakeX = 0;
     let smoothShakeY = 0;
-    let smoothShakeScale = 1;
-    const smoothedBars = new Float32Array(36);
+    const smoothedBars = new Float32Array(32);
 
-    const resetStageTransform = () => {
-      if (stageEl) {
+    const clearStageAndBlooms = () => {
+      if (stageEl && stageEl.style.transform) {
         stageEl.style.transform = "";
+      }
+      for (const el of visibleBlooms) {
+        el.style.removeProperty("--bloom");
       }
     };
 
@@ -65,193 +95,171 @@ export function AmbientSpectrumCanvas() {
         sample.isPlaying && spectrumMode !== "off" && allowMotion ? 1 : 0;
 
       presence +=
-        (activeTarget - presence) * (activeTarget > presence ? 0.08 : 0.06);
+        (activeTarget - presence) * (activeTarget > presence ? 0.09 : 0.07);
 
-      ctx.clearRect(0, 0, width, height);
+      lCtx.clearRect(0, 0, stripW, height);
+      rCtx.clearRect(0, 0, stripW, height);
 
-      // === 1) SMOOTH SUB-BASS MICRO-TREMOR ON STRONG BASS ===
-      if (stageEl && allowMotion) {
-        const bass = sample.isPlaying ? sample.bass : 0;
-        const threshold = 0.62;
-        const excess = bass > threshold ? (bass - threshold) / (1 - threshold) : 0;
-
-        if (excess > 0.005) {
-          shakePhase += 0.42 + excess * 0.38;
-          // Smooth organic harmonic wave (never jagged random jitter)
-          const amp = excess * excess;
-          const targetX = Math.sin(shakePhase * 1.15) * amp * 2.4;
-          const targetY = Math.cos(shakePhase * 1.55) * amp * 1.9;
-          const targetScale = 1 + amp * 0.003;
-
-          smoothShakeX += (targetX - smoothShakeX) * 0.24;
-          smoothShakeY += (targetY - smoothShakeY) * 0.24;
-          smoothShakeScale += (targetScale - smoothShakeScale) * 0.22;
-        } else {
-          smoothShakeX += (0 - smoothShakeX) * 0.14;
-          smoothShakeY += (0 - smoothShakeY) * 0.14;
-          smoothShakeScale += (1 - smoothShakeScale) * 0.14;
-        }
-
-        if (
-          Math.abs(smoothShakeX) > 0.02 ||
-          Math.abs(smoothShakeY) > 0.02 ||
-          Math.abs(smoothShakeScale - 1) > 0.0001
-        ) {
-          stageEl.style.transform = `translate3d(${smoothShakeX.toFixed(2)}px, ${smoothShakeY.toFixed(2)}px, 0) scale(${smoothShakeScale.toFixed(4)})`;
-        } else {
-          resetStageTransform();
+      // 1) Update localized blooms ONLY on the 3-6 visible accent nodes (stars, diamonds, neon sign)
+      if (allowMotion && visibleBlooms.size > 0) {
+        const bloomVal = sample.isPlaying
+          ? Math.min(1, sample.bass * 0.72 + sample.high * 0.35)
+          : 0;
+        const bloomStr = bloomVal > 0.02 ? bloomVal.toFixed(3) : "0";
+        for (const el of visibleBlooms) {
+          el.style.setProperty("--bloom", bloomStr);
         }
       }
 
-      // === 2) SIDE-MARGIN SPECTRUMS (LEFT & RIGHT EDGES) ===
+      // 2) Smooth sub-bass micro-tremor on strong bass hits (> 0.62)
+      if (stageEl && allowMotion) {
+        const bass = sample.isPlaying ? sample.bass : 0;
+        const threshold = 0.62;
+        const excess =
+          bass > threshold ? (bass - threshold) / (1 - threshold) : 0;
+
+        if (excess > 0.008) {
+          shakePhase += 0.42 + excess * 0.36;
+          const amp = excess * excess;
+          const targetX = Math.sin(shakePhase * 1.15) * amp * 2.2;
+          const targetY = Math.cos(shakePhase * 1.55) * amp * 1.7;
+
+          smoothShakeX += (targetX - smoothShakeX) * 0.24;
+          smoothShakeY += (targetY - smoothShakeY) * 0.24;
+        } else {
+          smoothShakeX *= 0.84;
+          smoothShakeY *= 0.84;
+        }
+
+        if (Math.abs(smoothShakeX) > 0.04 || Math.abs(smoothShakeY) > 0.04) {
+          stageEl.style.transform = `translate3d(${smoothShakeX.toFixed(2)}px, ${smoothShakeY.toFixed(2)}px, 0)`;
+        } else if (stageEl.style.transform) {
+          stageEl.style.transform = "";
+        }
+      }
+
+      // 3) Narrow side-edge spectrum strips (left & right margins)
       if (presence > 0.008) {
         const [c1, c2, c3] = sample.palette;
         const bass = sample.bass;
         const high = sample.high;
-        const isMobile = width < 768;
-
-        // Keep spectrums neatly inside the side margins
-        const maxReach = isMobile
-          ? Math.min(34, width * 0.09)
-          : Math.min(92, width * 0.075);
-
+        const isMobile = stripW < 50;
+        const maxReach = stripW - 8;
         const padY = height * 0.12;
         const usableH = height - padY * 2;
 
-        // Vertical Vice Sunset gradient along the side edges
-        const sideGrad = ctx.createLinearGradient(0, padY, 0, height - padY);
-        sideGrad.addColorStop(0, hexWithAlpha(c1, presence * 0.34));
-        sideGrad.addColorStop(0.52, hexWithAlpha(c2, presence * 0.38));
-        sideGrad.addColorStop(1, hexWithAlpha(c3, presence * 0.36));
+        const sideGrad = lCtx.createLinearGradient(0, padY, 0, height - padY);
+        sideGrad.addColorStop(0, hexWithAlpha(c1, presence * 0.36));
+        sideGrad.addColorStop(0.52, hexWithAlpha(c2, presence * 0.4));
+        sideGrad.addColorStop(1, hexWithAlpha(c3, presence * 0.38));
 
         if (spectrumMode === "bars") {
-          const count = isMobile ? 22 : 34;
-          const gap = isMobile ? 7 : 9;
+          const count = isMobile ? 20 : 30;
+          const gap = isMobile ? 8 : 10;
           const barH = Math.max(2.5, (usableH - gap * (count - 1)) / count);
 
-          ctx.save();
-          ctx.fillStyle = sideGrad;
+          lCtx.fillStyle = sideGrad;
+          rCtx.fillStyle = sideGrad;
+          const tickColor = hexWithAlpha(c2, presence * (0.3 + high * 0.35));
 
           for (let i = 0; i < count; i++) {
             const distFromCenter =
               Math.abs(i - (count - 1) / 2) / ((count - 1) / 2);
-            const bin = 1 + Math.floor(distFromCenter * 40);
+            const bin = 1 + Math.floor(distFromCenter * 38);
             const rawVal = (sample.spectrum[bin] ?? 0) / 255;
 
             const prev = smoothedBars[i] ?? 0;
-            const val = prev + (rawVal - prev) * (rawVal > prev ? 0.42 : 0.14);
+            const val = prev + (rawVal - prev) * (rawVal > prev ? 0.42 : 0.15);
             smoothedBars[i] = val;
 
-            // Gentle center-weighted taper so edges feel organic
-            const taper = 0.42 + (1 - distFromCenter) * 0.65;
+            const taper = 0.42 + (1 - distFromCenter) * 0.62;
             const barW = Math.max(3, val * maxReach * taper);
             const y = padY + i * (barH + gap);
 
-            // Left edge bar (grows right)
-            ctx.beginPath();
-            ctx.roundRect(0, y, barW, barH, [0, 3, 3, 0]);
-            ctx.fill();
+            lCtx.fillRect(0, y, barW, barH);
+            rCtx.fillRect(stripW - barW, y, barW, barH);
 
-            // Right edge bar (grows left)
-            ctx.beginPath();
-            ctx.roundRect(width - barW, y, barW, barH, [3, 0, 0, 3]);
-            ctx.fill();
-
-            // Subtle peak ink tick
-            if (val > 0.24) {
-              ctx.fillStyle = hexWithAlpha(c2, presence * (0.28 + high * 0.32));
-              ctx.fillRect(barW + 4, y, 2, barH);
-              ctx.fillRect(width - barW - 6, y, 2, barH);
-              ctx.fillStyle = sideGrad;
+            if (val > 0.25) {
+              lCtx.fillStyle = tickColor;
+              rCtx.fillStyle = tickColor;
+              lCtx.fillRect(barW + 3, y, 2, barH);
+              rCtx.fillRect(stripW - barW - 5, y, 2, barH);
+              lCtx.fillStyle = sideGrad;
+              rCtx.fillStyle = sideGrad;
             }
           }
-          ctx.restore();
         } else if (spectrumMode === "waves") {
-          phase += 0.018 + bass * 0.032;
-          const layers = [
-            { scale: 1.0, freq: 2.2, speed: 1, color: c1, alpha: 0.3, binOff: 2 },
-            { scale: 0.72, freq: 3.1, speed: -0.85, color: c2, alpha: 0.34, binOff: 14 },
-          ];
+          phase += 0.018 + bass * 0.03;
+          const steps = 32;
 
-          for (const layer of layers) {
-            const steps = 40;
-
-            // Draw mirrored left & right vertical edge waveforms
-            for (const side of [-1, 1] as const) {
-              ctx.save();
-              ctx.beginPath();
-              for (let i = 0; i <= steps; i++) {
-                const t = i / steps;
-                const y = padY + t * usableH;
-                const env = Math.sin(t * Math.PI);
-                const bin = layer.binOff + Math.floor(t * 24);
-                const fft = (sample.spectrum[bin] ?? 0) / 255;
-                const wfIdx = Math.floor(t * (sample.waveform.length - 1));
-                const wf = ((sample.waveform[wfIdx] ?? 128) - 128) / 128;
-
-                const reach =
-                  (6 +
-                    fft * maxReach * 0.92 +
-                    Math.abs(wf) * maxReach * 0.45 +
-                    Math.sin(t * Math.PI * layer.freq + phase * layer.speed) *
-                      (5 + bass * 10)) *
-                  layer.scale *
-                  env;
-
-                const x = side === -1 ? reach : width - reach;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-              }
-
-              ctx.strokeStyle = hexWithAlpha(
-                layer.color,
-                presence * (layer.alpha + bass * 0.18)
-              );
-              ctx.lineWidth = 1.6 + bass * 1.1;
-              ctx.stroke();
-
-              // Soft translucent fill tucked to the page edge
-              ctx.lineTo(side === -1 ? 0 : width, height - padY);
-              ctx.lineTo(side === -1 ? 0 : width, padY);
-              ctx.closePath();
-              ctx.fillStyle = hexWithAlpha(
-                layer.color,
-                presence * (0.08 + bass * 0.08)
-              );
-              ctx.fill();
-              ctx.restore();
+          for (const [ctx, isLeft] of [
+            [lCtx, true],
+            [rCtx, false],
+          ] as const) {
+            ctx.beginPath();
+            for (let i = 0; i <= steps; i++) {
+              const t = i / steps;
+              const y = padY + t * usableH;
+              const env = Math.sin(t * Math.PI);
+              const bin = 2 + Math.floor(t * 26);
+              const fft = (sample.spectrum[bin] ?? 0) / 255;
+              const reach =
+                (5 +
+                  fft * maxReach * 0.92 +
+                  Math.sin(t * Math.PI * 2.5 + phase) * (4 + bass * 9)) *
+                env;
+              const x = isLeft ? reach : stripW - reach;
+              if (i === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
             }
+            ctx.strokeStyle = hexWithAlpha(c2, presence * (0.38 + bass * 0.2));
+            ctx.lineWidth = 1.75;
+            ctx.stroke();
+
+            ctx.lineTo(isLeft ? 0 : stripW, height - padY);
+            ctx.lineTo(isLeft ? 0 : stripW, padY);
+            ctx.closePath();
+            ctx.fillStyle = hexWithAlpha(c1, presence * (0.1 + bass * 0.08));
+            ctx.fill();
           }
         }
       }
 
-      const stillTrembling =
-        Math.abs(smoothShakeX) > 0.02 || Math.abs(smoothShakeY) > 0.02;
+      const stillMoving =
+        Math.abs(smoothShakeX) > 0.04 || Math.abs(smoothShakeY) > 0.04;
 
-      if (isPlaying || presence > 0.008 || stillTrembling) {
+      if (isPlaying || presence > 0.008 || stillMoving) {
         rafId = requestAnimationFrame(draw);
       } else {
-        resetStageTransform();
+        clearStageAndBlooms();
       }
     };
 
-    if (isPlaying || spectrumMode !== "off") {
+    if (isPlaying) {
       rafId = requestAnimationFrame(draw);
     }
 
     return () => {
       cancelAnimationFrame(rafId);
+      bloomObserver.disconnect();
       window.removeEventListener("resize", resize);
-      resetStageTransform();
+      clearStageAndBlooms();
     };
   }, [isPlaying, spectrumMode]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[1] h-full w-full mix-blend-multiply"
-    />
+    <>
+      <canvas
+        ref={leftCanvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[2] h-full w-[38px] md:w-[96px]"
+      />
+      <canvas
+        ref={rightCanvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed right-0 top-0 z-[2] h-full w-[38px] md:w-[96px]"
+      />
+    </>
   );
 }
 

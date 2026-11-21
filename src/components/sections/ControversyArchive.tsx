@@ -26,11 +26,10 @@ function ControversyCard({
 
   return (
     <motion.article
-      layout
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.42, ease: MOTION.viceGlide }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.3, ease: MOTION.viceGlide }}
       id={item.id}
       className={`group flex flex-col border border-[var(--ink-rule)] bg-[var(--surface-paper-elevated)] shadow-[1px_3px_0_rgba(48,27,34,0.08)] transition-colors hover:border-[var(--ink-primary)] ${
         item.featured ? "lg:col-span-2" : "lg:col-span-1"
@@ -194,16 +193,13 @@ export function ControversyArchive() {
 
       {/* Asymmetric Editorial Grid */}
       {filteredCases.length > 0 ? (
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredCases.map((item, idx) => (
               <ControversyCard key={item.id} item={item} index={idx} />
             ))}
           </AnimatePresence>
-        </motion.div>
+        </div>
       ) : (
         <div className="border border-dashed border-[var(--ink-rule)] bg-[var(--surface-paper-elevated)] p-10 text-center">
           <p className="font-signage text-[1.4rem] font-bold text-[var(--ink-primary)]">

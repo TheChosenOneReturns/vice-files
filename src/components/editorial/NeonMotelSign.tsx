@@ -18,20 +18,31 @@ export function NeonMotelSign({ className = "" }: { className?: string }) {
         flickering ? "opacity-60" : "opacity-100"
       } ${className}`}
     >
-      {/* Bass-reactive subtle neon halo */}
+      {/* Targeted reactive neon bloom halo (only updated when visible) */}
       <span
+        data-music-bloom=""
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-2 rounded-full blur-md bass-hero-halo"
+        className="pointer-events-none absolute -inset-3 rounded-full blur-md music-bloom-halo"
         style={{ background: "var(--grad-neon-sign)" }}
       />
-      <span className="relative text-[0.72rem] text-[#8D51B5]">★</span>
+      <span
+        data-music-bloom=""
+        className="relative text-[0.74rem] text-[#8D51B5] music-bloom-star"
+      >
+        ★
+      </span>
       <span className="relative my-2 flex flex-col items-center gap-0.5 font-masthead text-[1.02rem] leading-none tracking-tight masthead-sunset">
         <span>V</span>
         <span>I</span>
         <span>C</span>
         <span>E</span>
       </span>
-      <span className="relative text-[0.72rem] text-[#E65A9D]">★</span>
+      <span
+        data-music-bloom=""
+        className="relative text-[0.74rem] text-[#E65A9D] music-bloom-star"
+      >
+        ★
+      </span>
     </button>
   );
 }
