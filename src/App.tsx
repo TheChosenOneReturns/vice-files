@@ -4,6 +4,7 @@ import { useViceStore } from "./store/useViceStore";
 import { SmoothScrollProvider } from "./components/core/SmoothScrollProvider";
 import { PaperTexturesLayer } from "./components/core/PaperTexturesLayer";
 import { VhsCrtOverlay } from "./components/core/VhsCrtOverlay";
+import { ViceCursor } from "./components/core/ViceCursor";
 import { Topbar } from "./components/core/Topbar";
 import { HeroPostcard } from "./components/sections/HeroPostcard";
 import { LuGuideSection } from "./components/sections/LuGuideSection";
@@ -43,6 +44,7 @@ export function App() {
 
         <PaperTexturesLayer />
         <VhsCrtOverlay />
+        <ViceCursor />
         <AmbientSpectrumCanvas />
 
         <div id="vice-stage" className="relative z-10">
